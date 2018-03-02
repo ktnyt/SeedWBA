@@ -22,7 +22,6 @@ class GridRenderer(object):
         self.img_reward = pygame.image.load(reward_path)
         self.img_bg = pygame.image.load(chip_path)
         self.num_chips_per_line = int(self.img_bg.get_width() / self.grid_size)
-
         
     def __call__(self, map):
 

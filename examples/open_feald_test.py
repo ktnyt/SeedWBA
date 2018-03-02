@@ -11,7 +11,6 @@ if __name__ == "__main__":
     env = OpenFealdTest(renderer)
     env.reset()
 
-
     for _ in range(1000):
         env.render()
         action = env.action_space.sample()

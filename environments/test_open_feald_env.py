@@ -4,7 +4,9 @@ from environments import GridWorldEnv
 class OpenFealdTest(GridWorldEnv):
 
     def __init__(self, renderer=None):
-        super(OpenFealdTest, self).__init__(renderer)
+        super(OpenFealdTest, self).__init__(agent_pos_default=[6, 6],
+                                            reward_pos_default=[3, 3],
+                                            renderer=renderer)
 
         self.map.set([
                 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,

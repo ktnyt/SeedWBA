@@ -36,19 +36,3 @@ class Environment(object):
     def reset(self):
         raise NotImplementedError("reset must be explicitly overridden")
 
-    
-
-    """
-    @abstractmethod
-    def exec_episode(self):
-        raise NotImplementedError("exec_episode must be explicitly overridden")
-
-    @abstractmethod
-    def reset(self):
-        raise NotImplementedError("`reset` must be explicitly overridden")
-
-    @abstractmethod
-    def print_stat(self):
-        raise NotImplementedError("`print_stat` must be explicitly overridden")
-    """
-
