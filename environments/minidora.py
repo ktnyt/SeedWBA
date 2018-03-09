@@ -35,7 +35,7 @@ class MinidoraEnv(Environment):
 
         servo = ServoMotorData()
         servo.arm.left = (larm / 2 + 0.5)
-        servo.arm.right = (larm / 2 + 0.5)
+        servo.arm.right = (rarm / 2 + 0.5)
         self.client.move_servo_motor(servo)
 
         dc = DcMotorData()
