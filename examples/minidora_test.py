@@ -12,7 +12,7 @@ def passthrough(arg, *_):
     return arg
 
 
-def random_action(object):
+def random_action(*_):
     larm = random.uniform(-1.0, 1.0)
     rarm = random.uniform(-1.0, 1.0)
     return [larm, rarm, 0.0, 0.0]
