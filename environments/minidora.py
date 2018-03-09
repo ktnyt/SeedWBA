@@ -2,6 +2,7 @@ from environment import Environment
 
 import cv2
 from minidora import Minidora
+from minidora.dc_motor import DcMotorData
 from minidora.servo_motor import ServoMotorData
 
 
@@ -19,7 +20,8 @@ class MinidoraEnv(Environment):
         def update_pose(pose):
             self.pose = pose
 
-        self.image_thread = self.client.listen_to_camera(update_camera, block=False)
+        self.image_thread = self.client.listen_to_camera(
+            update_camera, block=False)
         self.pose_thread = self.client.listen_to_pose(update_pose, block=False)
 
         while self.pose is None or self.image is None:
@@ -31,10 +33,15 @@ class MinidoraEnv(Environment):
         lleg = action[2]
         rleg = action[3]
 
-        data = ServoMotorData()
-        data.arm.left = 0.0
-        data.arm.right = 0.0
-        self.client.move_servo_motor(data)
+        servo = ServoMotorData()
+        servo.arm.left = (larm / 2 + 0.5)
+        servo.arm.right = (larm / 2 + 0.5)
+        self.client.move_servo_motor(servo)
+
+        dc = DcMotorData()
+        dc.wheel.left = lleg * 100
+        dc.wheel.right = rleg * 100
+        self.client.move_dc_motor(dc)
 
         observation = {
             'image': self.image,
