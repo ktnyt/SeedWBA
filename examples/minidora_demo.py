@@ -3,11 +3,11 @@ import os
 import random
 from time import sleep
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
+path = os.path.dirname(os.path.join(os.path.abspath(__file__), '..'))
+sys.path.append(path)
 
 from environments import minidora
 from architecture import SeedWBA
-from noh import Circuit
 
 
 def passthrough(arg):
@@ -41,33 +41,25 @@ class PFC(object):
             self.past_act = (self.past_act + 1) % self.act_size
         return self.call_circuits[self.past_act](arg)
 
-    
 def main():
     env = minidora.MinidoraEnv('0.0.0.0', 'minidora-v0-mutsuki.local')
     
     architecture = SeedWBA()
 
-    right_hand = Circuit(('sa', 'bg'))
-    right_hand.implement(sa=passthrough, bg=random_action_r)
-    left_hand = Circuit(('sa', 'bg'))
-    left_hand.implement(sa=passthrough, bg=random_action_l)
-    double_hand = Circuit(('sa', 'bg'))
-    double_hand.implement(sa=passthrough, bg=random_action_d)
+    right_hand = architecture.create_circuit('right_hand', ('sa', 'bg', 'pfc'))
+    left_hand = architecture.create_circuit('left_hand', ('sa', 'bg', 'pfc'))
+    double_hand = architecture.create_circuit('double_hand', ('sa', 'bg', 'pfc'))
 
-    main = Circuit(('pfc', 'ma'))
-    main.implement(
-        pfc=PFC([right_hand, left_hand, double_hand]),
-        ma=passthrough
-    )
-    architecture.add_circuits(main=main)
-
+    right_hand.implement(passthrough, random_action_r)
+    left_hand.implement(passthrough, random_action_l)
+    double_hand.implementpassthrough, (random_action_d)
 
     nsteps = 500000
     action = [0.5, 0.5, 0.0, 0.0]
     for _ in range(nsteps):
         observation, reward, done, info = env.step(action)
-        action = architecture.main(observation)
-        print("acrion ",  action)
+        action = architecture(sa=observation)
+        print("action ",  action)
         sleep(0.1)
         
         
