@@ -20,12 +20,14 @@ class MinidoraEnv(Environment):
         def update_pose(pose):
             self.pose = pose
 
-        self.image_thread = self.client.listen_to_camera(
-            update_camera, block=False)
-        self.pose_thread = self.client.listen_to_pose(update_pose, block=False)
+        #self.image_thread = self.client.listen_to_camera(
+        #    update_camera, block=False)
+        #self.pose_thread = self.client.listen_to_pose(update_pose, block=False)
+        self.image_thread = self.client.listen_to_camera(update_camera)
+        self.pose_thread = self.client.listen_to_pose(update_pose) 
 
-        while self.pose is None or self.image is None:
-            continue
+        #while self.pose is None or self.image is None:
+        #    continue
 
     def step(self, action):
         larm = action[0]

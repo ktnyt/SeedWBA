@@ -8,4 +8,5 @@ class SeedWBA(Architecture):
             (('amg', 'sa'), 'hip'),
             (('hip', 'bg'), 'pfc'),
             ('hip', 'amg'),
+            ('pfc', 'ma')
         )
