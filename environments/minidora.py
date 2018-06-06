@@ -27,19 +27,17 @@ class MinidoraEnv(Environment):
         #    continue
 
     def step(self, action):
-        larm = action[0]
-        rarm = action[1]
-        lleg = action[2]
-        rleg = action[3]
-
         servo = ServoMotorData()
-        servo.arm.left = (larm / 2 + 0.5)
-        servo.arm.right = (rarm / 2 + 0.5)
+        if "armleft" in action: servo.arm.left = (action["armleft"] / 2 + 0.5)
+        if "armright" in action: servo.arm.right = (action["armright"] / 2 + 0.5)
+        if "headroll" in action: servo.head.roll = action["headroll"]
+        if "headpitch" in action: servo.head.pitch = action["headpitch"]
+        if "headyaw" in action: servo.head.yaw = action["headyaw"]
         self.client.move_servo_motor(servo)
 
         dc = DcMotorData()
-        dc.wheel.left = lleg * 100
-        dc.wheel.right = rleg * 100
+        if "wheelleft" in action: dc.wheel.left = action["wheelleft"] * 100
+        if "wheelright" in action: dc.wheel.right = action["wheelright"] * 100
         self.client.move_dc_motor(dc)
 
         observation = {
