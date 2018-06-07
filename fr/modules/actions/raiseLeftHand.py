@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from .action import Action
 
 BASE_ACTION = {
     "armleft": 0.0,
@@ -11,22 +10,20 @@ BASE_ACTION = {
     "wheelright": 0.0
 }
 
-class RaiseLeftHand(Action):
+class RaiseLeftHand(object):
     def __init__(self):
-        super().__init__(self)
+        pass
 
     def activate(self):
         # Called when action activated
-        super().activate(self)
         act = BASE_ACTION
         act["armleft"] = 1.0
         return act
     
     def update(self):
         # Called every frame while action is activated
-        super().update(self)
+        pass
 
     def deactivate(self):
         # Called when action deactivated
-        super().deactivate(self)
         return BASE_ACTION

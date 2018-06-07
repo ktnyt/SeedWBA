@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
-
-from .action import Action
+import time
+import math
 
 BASE_ACTION = {
     "armleft": 0.0,
@@ -13,13 +13,12 @@ BASE_ACTION = {
     "wheelright": 0.0
 }
 
-class RandomMove(Action):
+class RandomMove(object):
     def __init__(self):
-        super().__init__(self)
+        pass
 
     def activate(self):
         # Called when action activated
-        super().activate()
         act = BASE_ACTION
         act["armleft"] = 1.0
         act["armright"] = 1.0
@@ -27,17 +26,11 @@ class RandomMove(Action):
     
     def update(self):
         # Called every frame while action is activated
-        super().update(self)
-
-        if (random.random() < 0.005):
-            act = BASE_ACTION
-            act["armleft"] = random.uniform(-1.0, 1.0)
-            act["armright"] = random.uniform(-1.0, 1.0)
-            return act
-        else:
-            return {}
+        act = BASE_ACTION
+        act["armleft"] = math.sin(time.time() * 4)
+        act["armright"] = -math.sin(time.time() * 4)
+        return act
 
     def deactivate(self):
         # Called when action deactivated
-        super().deactivate(self)
         return BASE_ACTION
