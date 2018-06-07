@@ -15,7 +15,7 @@ BASE_ACTION = {
 
 class RandomMove(Action):
     def __init__(self):
-        super().__init__()
+        super().__init__(self)
 
     def activate(self):
         # Called when action activated
@@ -27,7 +27,7 @@ class RandomMove(Action):
     
     def update(self):
         # Called every frame while action is activated
-        super().update()
+        super().update(self)
 
         if (random.random() < 0.005):
             act = BASE_ACTION
@@ -39,5 +39,5 @@ class RandomMove(Action):
 
     def deactivate(self):
         # Called when action deactivated
-        super().deactivate()
+        super().deactivate(self)
         return BASE_ACTION

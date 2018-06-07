@@ -13,20 +13,20 @@ BASE_ACTION = {
 
 class RaiseRightHand(Action):
     def __init__(self):
-        super().__init__()
+        super().__init__(self)
 
     def activate(self):
         # Called when action activated
-        super().activate()
+        super().activate(self)
         act = BASE_ACTION
         act["armright"] = 1.0
         return act
     
     def update(self):
         # Called every frame while action is activated
-        super().update()
+        super().update(self)
 
     def deactivate(self):
         # Called when action deactivated
-        super().deactivate()
+        super().deactivate(self)
         return BASE_ACTION

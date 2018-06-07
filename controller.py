@@ -40,16 +40,16 @@ if __name__ == "__main__":
     
     # Making action instances for each files in modules/actions
     actions_obj = []
-    for f in glob.glob(os.path.join("modules/actions", "*.py")):
+    for f in glob.glob(os.path.join("fr/modules/actions", "*.py")):
         # Loading each files as module
         classname = os.path.splitext(os.path.basename(f))[0]
-        m = importlib.import_module("modules.actions.{}".format(classname))
+        m = importlib.import_module("fr.modules.actions.{}".format(classname))
         # Loading classes written in files
         actions_obj += [c for c in inspect.getmembers(m, inspect.isclass) if c[0] == my_capitalize(classname)]
     
     actions = [o for o in actions_obj if o[0] != 'Action']
 
-    print("Loaded actions: " + actions)
+    print("Loaded actions: " + str(actions))
 
     # Initializing environments
     env = minidora.MinidoraEnv('0.0.0.0', 'minidora-v0-yayoi.local')
@@ -57,16 +57,16 @@ if __name__ == "__main__":
 
     for action in actions:
         newcircuit = architecture.create_circuit(action[0], ('sa', 'bg', 'pfc'))
-        newcircuit.implement(passthrough, action[1].update())
+        newcircuit.implement(passthrough, action[1].update(action[1]))
 
     nsteps = 500000
-    action = BASE_ACTION
-    action["armright"] = 0.5
-    action["armright"] = 0.5
+    act = BASE_ACTION
+    act["armright"] = 0.5
+    act["armright"] = 0.5
     for _ in range(nsteps):
-        observation, reward, done, info = env.step(action)
-        action = architecture(sa=observation)
-        print("action ",  action)
+        observation, reward, done, info = env.step(act)
+        act = architecture(sa=observation)
+        print("action ",  act)
         time.sleep(1.0 / 60.0)
     
     exe.submit(update, actions)
