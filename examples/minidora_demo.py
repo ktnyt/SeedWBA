@@ -9,24 +9,37 @@ sys.path.append(path)
 from environments import minidora
 from architecture import SeedWBA
 
+BASE_ACTION = {
+    "armleft": 0.0,
+    "armright": 0.0,
+    "headroll": 0.0,
+    "headpitch": 0.0,
+    "headyaw": 0.0,
+    "wheelleft": 0.0,
+    "wheelright": 0.0
+}
 
 def passthrough(arg):
     return arg
 
 
 def random_action_r(_):
-    rarm = random.uniform(-1.0, 1.0)
-    return [0.0, rarm, 0.0, 0.0]
+    act = BASE_ACTION
+    act["armright"] = random.uniform(-1.0, 1.0)
+    return act
 
 
 def random_action_l(_):
-    larm = random.uniform(-1.0, 1.0)
-    return [larm, 0.0, 0.0, 0.0]
+    act = BASE_ACTION
+    act["armleft"] = random.uniform(-1.0, 1.0)
+    return act
 
 
 def random_action_d(_):
-    arm = random.uniform(-1.0, 1.0)
-    return [arm, arm, 0.0, 0.0]
+    act = BASE_ACTION
+    act["armright"] = random.uniform(-1.0, 1.0)
+    act["armright"] = random.uniform(-1.0, 1.0)
+    return act
 
 
 class PFC(object):
@@ -52,12 +65,14 @@ def main():
 
     right_hand.implement(passthrough, random_action_r)
     left_hand.implement(passthrough, random_action_l)
-    double_hand.implementpassthrough, (random_action_d)
+    double_hand.implement(passthrough, random_action_d)
 
     nsteps = 500000
-    action = [0.5, 0.5, 0.0, 0.0]
+    action = BASE_ACTION
+    action["armright"] = 0.5
+    action["armright"] = 0.5
     for _ in range(nsteps):
-        observation, reward, done, info = env.step(action)
+        observation, _, _, _ = env.step(action)
         action = architecture(sa=observation)
         print("action ",  action)
         sleep(0.1)
