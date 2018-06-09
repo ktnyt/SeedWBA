@@ -10,9 +10,6 @@ import glob
 BASE_ACTION = {
     "armleft": 0.0,
     "armright": 0.0,
-    "headroll": 0.0,
-    "headpitch": 0.0,
-    "headyaw": 0.0,
     "wheelleft": 0.0,
     "wheelright": 0.0
 }
@@ -32,7 +29,7 @@ def update(actions):
             if(action.active):
                 action.update()
 
-        time.sleep(1.0 / 60.0)
+        time.sleep(0.1)
 
 if __name__ == "__main__":
     # Initializing threads
@@ -40,6 +37,7 @@ if __name__ == "__main__":
     
     # Making action instances for each files in modules/actions
     actions_obj = []
+    actions = {}
     for f in glob.glob(os.path.join("fr/modules/actions", "*.py")):
         # Loading each files as module
         classname = os.path.splitext(os.path.basename(f))[0]
@@ -47,26 +45,38 @@ if __name__ == "__main__":
         # Loading classes written in files
         actions_obj += [c for c in inspect.getmembers(m, inspect.isclass) if c[0] == my_capitalize(classname)]
     
-    actions = [o for o in actions_obj if o[0] != 'Action']
+    for o in actions_obj:
+        if o[0] != 'Action': actions[o[0]] = o[1]
 
     print("Loaded actions: " + str(actions))
+
+    # Making action instances for each files in modules/analyzers
+    analyzers_obj = []
+    analyzers = {}
+    for f in glob.glob(os.path.join("fr/modules/analyzers", "*.py")):
+        # Loading each files as module
+        classname = os.path.splitext(os.path.basename(f))[0]
+        m = importlib.import_module("fr.modules.analyzers.{}".format(classname))
+        # Loading classes written in files
+        analyzers_obj += [c for c in inspect.getmembers(m, inspect.isclass) if c[0] == my_capitalize(classname)]
+    
+    for o in analyzers_obj:
+        if o[0] != 'Analyzer': analyzers[o[0]] = o[1]
+
+    print("Loaded analyzers: " + str(actions))
 
     # Initializing environments
     env = minidora.MinidoraEnv('0.0.0.0', 'minidora-v0-yayoi.local')
     architecture = SeedWBA()
-
-    for action in actions:
-        newcircuit = architecture.create_circuit(action[0], ('sa', 'bg', 'pfc'))
-        newcircuit.implement(passthrough, action[1].update(action[1]))
-
+ 
     nsteps = 500000
     act = BASE_ACTION
     act["armright"] = 0.5
     act["armright"] = 0.5
     for _ in range(nsteps):
         observation, reward, done, info = env.step(act)
-        act = architecture(sa=observation)
-        print("action ",  act)
-        time.sleep(1.0 / 60.0)
+        act = actions["SearchFaces"].update('')
+        print("Detected faces: {}".format(analyzers["IsFaceExist"].analyze('', observation)))
+        time.sleep(1.0)
     
     exe.submit(update, actions)
