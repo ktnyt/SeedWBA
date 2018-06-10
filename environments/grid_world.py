@@ -16,6 +16,7 @@ class GridMap(object):
         self.reward_pos_default = reward_pos_default
         self.reward_pos = self.reward_pos_default
 
+        # Action is the destination to move
         self.action_list = [[-1, 0], [1, 0], [0, -1], [0, 1]]
 
         self.is_reward = False
