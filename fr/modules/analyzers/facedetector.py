@@ -35,3 +35,27 @@ class FaceDetector(object):
         FaceDetector.lastRefreshed = time.time()
 
         return FaceDetector.facerect
+
+    @classmethod
+    def biggestFaceRect(self, observation):
+        facerect = self.getFacerect(observation)
+        if str(facerect) == "None": return
+        return max(facerect, key= (lambda r: r[2] * r[3]))
+    
+    @classmethod
+    def biggestFaceSizeNormalized(self, observation):
+        width, height, _ = observation["image"].shape
+        biggestface = self.biggestFaceRect(observation)
+        if str(biggestface) == "None": return 0.0
+        return biggestface[2] * biggestface[3] / width / height
+
+    @classmethod
+    def biggestFaceRectPosNormalized(self, observation):
+        width, height, _ = observation["image"].shape
+        biggestface = self.biggestFaceRect(observation)
+        if str(biggestface) == "None": return 0.0, 0.0
+        facex = biggestface[0] + biggestface[2] / 2
+        facey = biggestface[1] + biggestface[3] / 2
+        facexNormalized = (facex / width - 0.5) * 2.0
+        faceyNormalized = (facey / height - 0.5) * 2.0
+        return facexNormalized, faceyNormalized 
