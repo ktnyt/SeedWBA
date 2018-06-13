@@ -19,7 +19,11 @@ class GridRenderer(object):
         reward_path='../renderers/cheese.png'
         chip_path='../renderers/chip.png'
         self.img_agent = pygame.image.load(agent_img_path)
+        self.img_agent = pygame.transform.smoothscale(self.img_agent,
+                                                    (grid_size, grid_size))
         self.img_reward = pygame.image.load(reward_path)
+        self.img_reward = pygame.transform.smoothscale(self.img_reward,
+                                                    (grid_size, grid_size))
         self.img_bg = pygame.image.load(chip_path)
         self.num_chips_per_line = int(self.img_bg.get_width() / self.grid_size)
         

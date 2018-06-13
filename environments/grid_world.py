@@ -5,7 +5,7 @@ from environment import Environment
 
 class GridMap(object):
 
-    def __init__(self, agent_pos_default, reward_pos_default):
+    def __init__(self, as_leng, agent_pos_default, reward_pos_default):
 
         self.data = None
         self.ylen = -1
@@ -17,7 +17,10 @@ class GridMap(object):
         self.reward_pos = self.reward_pos_default
 
         # Action is the destination to move
-        self.action_list = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+        if as_leng == 4:
+            self.action_list = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+        else:
+            raise ValueError("as_leng should be set 4")
 
         self.is_reward = False
         self.map_type = 0
@@ -27,8 +30,7 @@ class GridMap(object):
 
         """ Wss it rewarding place? """
         if self.is_reward:
-            self.reward_pos = [random.randint(1, self.xlen-2),
-                               random.randint(1, self.ylen-2), ]
+            self.reward_pos = self.reward_pos_update()
             
         agent_pos_tmp = [x + y for (x, y)
                          in zip(self.agent_pos, self.action_list[action])]
@@ -48,7 +50,7 @@ class GridMap(object):
 
         return (observation, reward, done, info)
     
-    def set(self, map_data, ylen, xlen):
+    def set(self, map_data, ylen, xlen, reward_pos_update):
 
         if len(map_data) != (ylen * xlen):
             print ("ERROR: len(map) != (ylen * xlen)")
@@ -57,6 +59,7 @@ class GridMap(object):
         self.data = map_data
         self.ylen = ylen
         self.xlen = xlen
+        self.reward_pos_update = reward_pos_update
 
     def check(self, agent_pos):
         agent_i = agent_pos[1] * self.xlen + agent_pos[0]
@@ -79,12 +82,13 @@ class GridWorldEnv(Environment):
         def sample(self):
             return random.choice(self.as_list)
 
-    def __init__(self, agent_pos_default, reward_pos_default, renderer=None):
+    def __init__(self, as_leng, agent_pos_default, reward_pos_default,
+                 renderer=None):
 
         super(GridWorldEnv, self).__init__(renderer=renderer, as_leng=4)
         
         self.action_space = self.ActionSpace(self.as_leng)
-        self.map = GridMap(agent_pos_default, reward_pos_default)
+        self.map = GridMap(as_leng, agent_pos_default, reward_pos_default)
             
     def step(self, action):
         """

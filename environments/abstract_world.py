@@ -5,7 +5,7 @@ from environment import Environment
 
 class AbstractMap(object):
 
-    def __init__(self, agent_pos_default, reward_pos_default):
+    def __init__(self, agent_pos_default, reward_pos_default, episode_size=100):
 
         self.data = None
         self.field_size = -1
@@ -14,6 +14,9 @@ class AbstractMap(object):
         self.agent_pos = self.agent_pos_default
         self.reward_pos_default = reward_pos_default
         self.reward_pos = self.reward_pos_default
+
+        self.episode_size = episode_size
+        self.episode_counter = 0
 
         # Action is the destination ID
         self.action_list = None # Desided by field_size
@@ -24,6 +27,7 @@ class AbstractMap(object):
 
     def step(self, action):
 
+        self.episode_counter += 1
 
         """ Wss it rewarding place? """
         if self.is_reward:
@@ -32,11 +36,15 @@ class AbstractMap(object):
         is_success, self.is_reward = self.check(self.agent_pos,
                                                       self.action_list[action])
 
-        #print (is_success, self.is_reward, self.agent_pos, self.action_list[action])
+        # print (is_success, self.is_reward,
+        #        self.agent_pos, self.action_list[action])
         
-        observation = self.data
-        reward = 1 if self.is_reward else 0
-        done = None
+        observation = self.agent_pos
+        reward = 1. if self.is_reward else 0.
+        if self.episode_counter % self.episode_size == 0:
+            done = True
+        else:
+            done = False
         info = None
 
         """ Is it wall? """
@@ -44,7 +52,7 @@ class AbstractMap(object):
             return (observation, reward, done, info)
 
         self.agent_pos = self.action_list[action]
-
+        observation = self.agent_pos # is it OK?
         return (observation, reward, done, info)
 
     def set(self, map_data, effect_path_list,
@@ -100,6 +108,7 @@ class AbstractEnv(Environment):
         
         self.action_space = self.ActionSpace(self.as_leng)
         self.map = AbstractMap(agent_pos_default, reward_pos_default)
+        
             
     def step(self, action):
         """
@@ -115,5 +124,10 @@ class AbstractEnv(Environment):
         if self.renderer is not None:
             self.renderer(self.map)
 
+
+
     def reset(self):
-        pass
+        self.agent_pos = self.map.agent_pos_default
+        self.reward_pos = self.map.reward_pos_default
+        return self.map.agent_pos_default
+
