@@ -5,7 +5,7 @@ from environment import Environment
 
 class GridMap(object):
 
-    def __init__(self, as_leng, agent_pos_default, reward_pos_default):
+    def __init__(self, as_leng, agent_pos_default, reward_pos_default, episode_size=1000):
 
         self.data = None
         self.ylen = -1
@@ -16,6 +16,10 @@ class GridMap(object):
         self.reward_pos_default = reward_pos_default
         self.reward_pos = self.reward_pos_default
 
+
+        self.episode_size = episode_size
+        self.episode_counter = 0
+        
         # Action is the destination to move
         if as_leng == 4:
             self.action_list = [[-1, 0], [1, 0], [0, -1], [0, 1]]
@@ -27,7 +31,8 @@ class GridMap(object):
         
     def step(self, action):
 
-
+        self.episode_counter += 1
+        
         """ Wss it rewarding place? """
         if self.is_reward:
             self.reward_pos = self.reward_pos_update()
@@ -37,9 +42,14 @@ class GridMap(object):
 
         self.map_type, self.is_reward = self.check(agent_pos_tmp)
 
-        observation = self.data
-        reward = 1 if self.is_reward else 0
-        done = None
+        # observation = self.data
+        observation = self.agent_pos
+        
+        reward = 1. if self.is_reward else 0.
+        if self.episode_counter % self.episode_size == 0:
+            done = True
+        else:
+            done = False
         info = None
 
         """ Is it wall? """
@@ -47,7 +57,8 @@ class GridMap(object):
             return (observation, reward, done, info)
 
         self.agent_pos = agent_pos_tmp
-
+        observation = self.agent_pos
+        
         return (observation, reward, done, info)
     
     def set(self, map_data, ylen, xlen, reward_pos_update):
@@ -97,14 +108,16 @@ class GridWorldEnv(Environment):
         """
         
         res = self.map.step(action)
-        print (res)
+        self.reward_pos = self.map.reward_pos
+        self.agent_pos = self.map.agent_pos
         return res
 
     def render(self):
         
-        print (self.map.reward_pos)
         if self.renderer is not None:
             self.renderer(self.map)
 
     def reset(self):
-        pass
+        self.agent_pos = self.map.agent_pos_default
+        self.reward_pos = self.map.reward_pos_default
+        return self.map.agent_pos_default

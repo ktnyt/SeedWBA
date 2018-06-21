@@ -87,7 +87,7 @@ if __name__ == "__main__":
   
   while True:
 
-    env.render()
+    #env.render()
       
     # preprocess the observation, set input to network to be difference image
     cur_x = observation
@@ -169,6 +169,11 @@ if __name__ == "__main__":
       print ('resetting env. episode reward total was %f. running mean: %f'
              % (reward_sum, running_reward))
       if episode_number % 100 == 0: pickle.dump(pg.model, open('save.p', 'wb'))
+
+      f = open("res.txt", "a")
+      f.write(str(reward_sum) + "\n")
+      f.close()
+
       reward_sum = 0
       observation = env.reset() # reset env
 

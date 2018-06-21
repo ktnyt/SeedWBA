@@ -7,7 +7,7 @@ class MizutaMazeGrid(GridWorldEnv):
     xlen = 15
     
     def __init__(self, renderer=None, as_leng=4, agent_pos_default=[7,7],
-                 reward_pos_default=[2,2]):
+                 reward_pos_default=[2,2], map_type=1):
         super(MizutaMazeGrid, self).__init__(as_leng=as_leng,
                                             agent_pos_default=agent_pos_default,
                                             reward_pos_default=reward_pos_default,
@@ -22,8 +22,9 @@ class MizutaMazeGrid(GridWorldEnv):
                 
                 return self.table[self.counter]
         reward_pos_update = RewardPosUpdate()
-        
-        self.map.set([
+
+        if map_type == 1:
+            self.map.set([
                 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
                 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
@@ -39,7 +40,25 @@ class MizutaMazeGrid(GridWorldEnv):
                 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
                 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
                 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1            
-        ], ylen=15, xlen=15, reward_pos_update=reward_pos_update)
+            ], ylen=15, xlen=15, reward_pos_update=reward_pos_update)
+        elif map_type == 2:
+            self.map.set([
+                1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1,
+                1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1,
+                1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1,
+                1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1,
+                1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1,
+                1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1,
+                1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1,
+                1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1,
+                1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1,
+                1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1            
+            ], ylen=15, xlen=15, reward_pos_update=reward_pos_update)            
 
         
 
