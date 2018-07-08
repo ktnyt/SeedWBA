@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
-class Action(object):
+class Noaction(object):
     def activate(self):
         # Called when action activated
-        pass
+        return {}
     
     def update(self):
         # Called every frame while action is activated
-        pass
+        return {}
 
     def deactivate(self):
         # Called when action deactivated
-        pass
+        return {}
